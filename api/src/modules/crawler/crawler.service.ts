@@ -12,15 +12,14 @@ export class CrawlerService {
 
       const $ = cheerio.load(data);
 
-      // Extrai o título da página
       const title = $('title').text();
 
-      // Extrai os links da página
-      const links: string[] = [];
+      let links: string[] = [];
+      
       $('a').each((_, element) => {
         const href = $(element).attr('href');
         if (href && href.startsWith('http')) {
-          links.push(href);
+          links = [...links, href];
         }
     });
     
