@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TreeService } from './tree.service';
 
 @Module({
-  providers: [TreeService]
+  providers: [TreeService], 
+  exports: [TreeService]
 })
 export class TreeModule {}
