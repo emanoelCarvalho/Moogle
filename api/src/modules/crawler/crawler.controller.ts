@@ -12,5 +12,6 @@ export class CrawlerController {
     }
 
     const result = await this.crawlerService.crawl(url);
+    return result;
   }
 }

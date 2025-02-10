@@ -4,30 +4,30 @@ import * as cheerio from 'cheerio';
 
 @Injectable()
 export class CrawlerService {
-    async crawl(url: string) {
-        try {
-            const {data} = await axios.get(url);
-            const $ = cheerio.load(data); 
+  async crawl(url: string) {
+    try {
+      const { data } = await axios.get(url, {
+        headers: { 'User-Agent': 'Mozilla/5.0' } 
+      });
 
-            const pageTitle = $('title').text();
-            let links: string[] = [];
+      const $ = cheerio.load(data);
 
-            $('a').each((_, element) => {
-                const href = $(element).attr('href');
+      // Extrai o título da página
+      const title = $('title').text();
 
-                if (href && href.startsWith('http')) {
-                    links = [...links, href];
-                }
-            }); 
-
-            return {
-                url, 
-                title: pageTitle,
-                links
-            }; 
-        } catch (error) {
-            console.error(`Error crawling ${url}: `, error.message);
-            return null;
+      // Extrai os links da página
+      const links: string[] = [];
+      $('a').each((_, element) => {
+        const href = $(element).attr('href');
+        if (href && href.startsWith('http')) {
+          links.push(href);
         }
+    });
+    
+    return { url, title, links };
+    } catch (error) {
+      console.error('Erro ao fazer crawling:', error.message);
+      return { error: 'Erro ao processar a URL. Verifique se está acessível.' };
     }
+  }
 }
