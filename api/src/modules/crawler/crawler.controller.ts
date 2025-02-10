@@ -8,10 +8,21 @@ export class CrawlerController {
   @Get()
   async crawl(@Query('url') url: string) {
     if (!url) {
-      return 'Please provide a URL to crawl';
+      return { error: 'Por favor, forneça uma URL válida' };
     }
+    return this.crawlerService.crawl(url);
+  }
 
-    const result = await this.crawlerService.crawl(url);
-    return result;
+  @Get('index')
+  getAllIndexedPages() {
+    return this.crawlerService.getAllIndexedPages();
+  }
+
+  @Get('search')
+  searchByTitle(@Query('title') title: string) {
+    if (!title) {
+      return { error: 'Por favor, forneça um título para busca' };
+    }
+    return this.crawlerService.searchByTitle(title);
   }
 }
