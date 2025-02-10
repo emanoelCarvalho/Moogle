@@ -25,4 +25,17 @@ export class CrawlerController {
     }
     return this.crawlerService.searchByTitle(title);
   }
+
+  @Get('search-keyword')
+  searchByKeyword(@Query('term') term: string) {
+    if (!term) {
+      return { error: 'Por favor, forneça um termo para busca' };
+    }
+    return this.crawlerService.searchByKeyword(term);
+  }
+
+  @Get('indexed-terms')
+  getAllIndexedTerms() {
+    return this.crawlerService.getAllIndexedTerms();
+  }
 }
