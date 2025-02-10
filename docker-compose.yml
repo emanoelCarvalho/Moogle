@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  postgres: 
+    image: postgres:lastest
+    environment:
+      POSTGRES_DB: buscador
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./api
+    ports:
+      -3000:3000
+    depends_on:
+      - postgres
+
+  frontend: 
+    build: ./client
+    ports:
+      - 8080:8080
+    depends_on:
+      - backend
