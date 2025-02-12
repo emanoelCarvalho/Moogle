@@ -1,60 +1,60 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Keyword } from 'src/entities/keyword.entity';
-import { Page } from 'src/entities/page.entity';
+import { IndexNode } from './index-node';
+
 @Injectable()
 export class IndexerService {
-  constructor(
-    @InjectRepository(Keyword)
-    private keywordRepository: Repository<Keyword>,
+  private root: IndexNode | null = null;
 
-    @InjectRepository(Page)
-    private pageRepository: Repository<Page>,
-  ) {}
-
-  async insert(term: string, url: string) {
-    term = term.toLowerCase(); // Normalizar a chave
-
-    let keyword = await this.keywordRepository.findOne({
-      where: { term },
-      relations: ['pages'],
-    });
-
-    if (!keyword) {
-      keyword = this.keywordRepository.create({ term, pages: [] });
-    }
-
-    let page = await this.pageRepository.findOne({ where: { url } });
-
-    if (!page) {
-      page = this.pageRepository.create({ url });
-      await this.pageRepository.save(page);
-    }
-
-    if (!keyword.pages.some(p => p.id === page.id)) {
-      keyword.pages.push(page);
-      await this.keywordRepository.save(keyword);
-    }
+  insert(term: string, url: string) {
+    this.root = this.insertNode(this.root, term, url);
   }
 
-  async search(term: string): Promise<string[]> {
-    term = term.toLowerCase();
+  private insertNode(
+    node: IndexNode | null,
+    term: string,
+    url: string,
+  ): IndexNode {
+    if (!node) return new IndexNode(term, url);
 
-    const keyword = await this.keywordRepository.findOne({
-      where: { term },
-      relations: ['pages'],
-    });
+    if (term < node.term) {
+      node.left = this.insertNode(node.left, term, url);
+    } else if (term > node.term) {
+      node.right = this.insertNode(node.right, term, url);
+    } else {
+      node.urls.add(url);
+    }
 
-    return keyword ? keyword.pages.map(page => page.url) : [];
+    return node;
   }
 
-  async getAll(): Promise<{ term: string; urls: string[] }[]> {
-    const keywords = await this.keywordRepository.find({ relations: ['pages'] });
+  search(term: string): string[] {
+    const node = this.searchNode(this.root, term);
+    return node ? Array.from(node.urls) : [];
+  }
 
-    return keywords.map(keyword => ({
-      term: keyword.term,
-      urls: keyword.pages.map(page => page.url),
-    }));
+  private searchNode(node: IndexNode | null, term: string): IndexNode | null {
+    if (!node) return null;
+    if (term === node.term) return node;
+
+    return term < node.term
+      ? this.searchNode(node.left, term)
+      : this.searchNode(node.right, term);
+  }
+
+  getAll(): { term: string; urls: string[] }[] {
+    const result: { term: string; urls: string[] }[] = [];
+    this.inOrderTraversal(this.root, result);
+    return result;
+  }
+
+  private inOrderTraversal(
+    node: IndexNode | null,
+    result: { term: string; urls: string[] }[],
+  ) {
+    if (node) {
+      this.inOrderTraversal(node.left, result);
+      result.push({ term: node.term, urls: Array.from(node.urls) });
+      this.inOrderTraversal(node.right, result);
+    }
   }
 }
