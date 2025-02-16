@@ -3,12 +3,16 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { TreeService } from '../tree/tree.service';
 import { IndexerService } from '../indexer/indexer.service';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class CrawlerService {
+  private readonly jsonServerUrl = 'http://localhost:3001';
+
   constructor(
     private readonly treeService: TreeService,
     private readonly indexerService: IndexerService,
+    private readonly httpService: HttpService,
   ) {}
 
   async crawl(url: string) {
@@ -46,8 +50,14 @@ export class CrawlerService {
     return text
       .toLowerCase()
       .replace(/[^a-zA-Z0-9 ]/g, '')
-      .split(/\s+/) 
-      .filter((word) => word.length > 3); 
+      .split(/\s+/)
+      .filter((word) => word.length > 3);
+  }
+
+  async saveToJsonServer() {
+    const pages = this.treeService.getAll();
+
+    await this.httpService.put(this.jsonServerUrl, { pages }).toPromise();
   }
 
   getAllIndexedPages() {
