@@ -60,4 +60,12 @@ export class TreeService {
       this.inOrderTraversal(node.right, result);
     }
   }
+
+  getByTitle(title: string): TreeNode | null {
+    return this.searchByTitle(title);
+  }
+
+  private searchByTitle(title: string): TreeNode | null {
+    return this.searchNode(this.root, title);
+  }
 }

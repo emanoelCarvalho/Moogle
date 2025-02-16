@@ -9,10 +9,6 @@ export class SearchService {
     private readonly indexerService: IndexerService,
   ) {}
 
-  async searchByTitle(title: string) {
-    return this.indexerService.search(title);
-  }
-
   async searchByKeyword(term: string) {
     return this.indexerService.search(term);
   }
@@ -21,7 +17,12 @@ export class SearchService {
     return this.treeService.getAll();
   }
 
-  getAllIndexedTerms() {
+  async getAllIndexedTerms() {
     return this.indexerService.getAll();
   }
+
+  async searchByTitle(title: string) {
+    return this.treeService.getByTitle(title);
+  }
+
 }
