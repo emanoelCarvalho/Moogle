@@ -5,8 +5,6 @@ import { TreeService } from '../tree/tree.service';
 import { IndexerService } from '../indexer/indexer.service';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
-import * as fs from 'fs';
-import * as path from 'path';
 
 @Injectable()
 export class CrawlerService {
@@ -68,21 +66,5 @@ export class CrawlerService {
     } catch (error) {
       throw new Error('Erro ao salvar no JSON Server');
     }
-  }
-
-  getAllIndexedPages() {
-    return this.treeService.getAll();
-  }
-
-  searchByTitle(title: string) {
-    return this.treeService.search(title);
-  }
-
-  searchByKeyword(term: string) {
-    return this.indexerService.search(term);
-  }
-
-  getAllIndexedTerms() {
-    return this.indexerService.getAll();
   }
 }
