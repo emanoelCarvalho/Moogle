@@ -1,31 +1,3 @@
 {
-  "pages": [
-    {
-      "id": "4eea",
-      "url": "https://example.com/",
-      "title": "Example Domain",
-      "links": [
-        "https://www.iana.org/domains/example"
-      ],
-      "words": [
-        "example",
-        "domain",
-        "this",
-        "domain",
-        "illustrative",
-        "examples",
-        "documents",
-        "this",
-        "domain",
-        "literature",
-        "without",
-        "prior",
-        "coordination",
-        "asking",
-        "permission",
-        "more",
-        "information"
-      ]
-    }
-  ]
+  "pages": []
 }
