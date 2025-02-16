@@ -47,7 +47,6 @@ export class CrawlerService {
       await this.saveToJsonServer(pageData);
       return pageData;
     } catch (error) {
-      console.error('Erro no crawler:', error.message);
       return { error: 'Erro ao processar a URL' };
     }
   }
@@ -65,9 +64,8 @@ export class CrawlerService {
       const response = await lastValueFrom(
         this.httpService.post(`${this.jsonServerUrl}/pages`, pageData),
       );
-      // return response.data;
+      return response.data;
     } catch (error) {
-      console.error('Erro ao salvar no JSON Server:', error.message);
       throw new Error('Erro ao salvar no JSON Server');
     }
   }
