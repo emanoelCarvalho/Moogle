@@ -4,10 +4,14 @@ import * as cheerio from 'cheerio';
 import { TreeService } from '../tree/tree.service';
 import { IndexerService } from '../indexer/indexer.service';
 import { HttpService } from '@nestjs/axios';
+import { lastValueFrom } from 'rxjs';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class CrawlerService {
   private readonly jsonServerUrl = 'http://localhost:3001';
+  private readonly dataFilePath = path.join(__dirname, 'data.json');
 
   constructor(
     private readonly treeService: TreeService,
@@ -39,7 +43,11 @@ export class CrawlerService {
 
       words.forEach((word) => this.indexerService.insert(word, url));
 
-      return { url, title, links, words };
+      const pageData = { url, title, links, words };
+      // await this.saveToJsonFile(pageData);
+      await this.saveToJsonServer(pageData);
+
+      return pageData;
     } catch (error) {
       console.error('Erro no crawler:', error.message);
       return { error: 'Erro ao processar a URL' };
@@ -54,10 +62,33 @@ export class CrawlerService {
       .filter((word) => word.length > 3);
   }
 
-  async saveToJsonServer() {
-    const pages = this.treeService.getAll();
+  // private async saveToJsonFile(pageData: any) {
+  //   try {
+  //     let data = [];
+  //     if (fs.existsSync(this.dataFilePath)) {
+  //       const fileContent = fs.readFileSync(this.dataFilePath, 'utf-8');
+  //       data = JSON.parse(fileContent);
+  //     }
+  //     data.push(pageData);
+  //     fs.writeFileSync(this.dataFilePath, JSON.stringify(data, null, 2));
+  //     console.log('Dados salvos no arquivo JSON:', this.dataFilePath);
+  //   } catch (error) {
+  //     console.error('Erro ao salvar no arquivo JSON:', error.message);
+  //     throw new Error('Erro ao salvar no arquivo JSON');
+  //   }
+  // }
 
-    await this.httpService.put(this.jsonServerUrl, { pages }).toPromise();
+  async saveToJsonServer(pageData: any) {
+    try {
+      const response = await lastValueFrom(
+        this.httpService.post(`${this.jsonServerUrl}/pages`, pageData),
+      );
+      console.log('Salvo no JSON Server:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao salvar no JSON Server:', error.message);
+      throw new Error('Erro ao salvar no JSON Server');
+    }
   }
 
   getAllIndexedPages() {
