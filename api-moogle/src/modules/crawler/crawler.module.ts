@@ -9,6 +9,5 @@ import { HttpModule } from '@nestjs/axios';
   imports: [TreeModule, IndexerModule, HttpModule],
   controllers: [CrawlerController], 
   providers: [CrawlerService],
-  exports: [CrawlerService]
 })
 export class CrawlerModule {}
