@@ -57,4 +57,8 @@ export class IndexerService {
       this.inOrderTraversal(node.right, result);
     }
   }
+
+  getByTitle(title: string): string[] {
+    return this.search(title);
+  }
 }

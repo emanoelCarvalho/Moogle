@@ -45,6 +45,7 @@ export class CrawlerService {
       await this.saveToJsonServer(pageData);
       return pageData;
     } catch (error) {
+      console.log(url)
       return { error: 'Erro ao processar a URL' };
     }
   }

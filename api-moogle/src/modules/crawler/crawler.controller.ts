@@ -12,30 +12,4 @@ export class CrawlerController {
     }
     return this.crawlerService.crawl(url);
   }
-
-  @Get('index')
-  getAllIndexedPages() {
-    return this.crawlerService.getAllIndexedPages();
-  }
-
-  @Get('search')
-  searchByTitle(@Query('title') title: string) {
-    if (!title) {
-      return { error: 'Por favor, forneça um título para busca' };
-    }
-    return this.crawlerService.searchByTitle(title);
-  }
-
-  @Get('search-keyword')
-  searchByKeyword(@Query('term') term: string) {
-    if (!term) {
-      return { error: 'Por favor, forneça um termo para busca' };
-    }
-    return this.crawlerService.searchByKeyword(term);
-  }
-
-  @Get('indexed-terms')
-  getAllIndexedTerms() {
-    return this.crawlerService.getAllIndexedTerms();
-  }
 }
