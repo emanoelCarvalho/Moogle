@@ -17,9 +17,11 @@ export class SearchService {
     return this.indexerService.search(term);
   }
 
-  async getAll() {
+  async getAllIndexedPages() {
     return this.treeService.getAll();
   }
 
-  
+  getAllIndexedTerms() {
+    return this.indexerService.getAll();
+  }
 }
