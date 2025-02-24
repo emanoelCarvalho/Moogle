@@ -24,5 +24,4 @@ export class SearchService {
   async searchByTitle(title: string) {
     return this.treeService.getByTitle(title);
   }
-
 }
