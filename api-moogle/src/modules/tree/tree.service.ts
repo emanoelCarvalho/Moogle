@@ -1,9 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { TreeNode } from './tree-node';
-
+import { DataLoaderService } from 'src/data-loader/data-loader.service';
 @Injectable()
-export class TreeService {
+export class TreeService implements OnModuleInit {
   private root: TreeNode | null = null;
+
+  constructor(private readonly dataLoader: DataLoaderService) {}
+
+  onModuleInit() {
+    this.loadData();
+  }
+
+  private loadData() {
+    const data = this.dataLoader.loadData();
+    data.pages.forEach((page: { url: string; title: string; links: string[] }) => {
+      this.insert(page.url, page.title, page.links);
+    });
+  }
 
   insert(url: string, title: string, links: string[]) {
     const newNode = new TreeNode(url, title, links);
@@ -35,12 +48,8 @@ export class TreeService {
   }
 
   private searchNode(node: TreeNode | null, title: string): TreeNode | null {
-    if (!node) {
-      return null;
-    }
-    if (title === node.title) {
-      return node;
-    }
+    if (!node) return null;
+    if (title === node.title) return node;
 
     return title < node.title
       ? this.searchNode(node.left, title)
@@ -56,7 +65,7 @@ export class TreeService {
   private inOrderTraversal(node: TreeNode | null, result: TreeNode[]) {
     if (node) {
       this.inOrderTraversal(node.left, result);
-      result = [...result, node];
+      result.push(node); // Corrigido aqui
       this.inOrderTraversal(node.right, result);
     }
   }
