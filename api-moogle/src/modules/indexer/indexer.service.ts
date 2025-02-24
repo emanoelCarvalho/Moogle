@@ -1,9 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { IndexNode } from './index-node';
-
+import { DataLoaderService } from 'src/data-loader/data-loader.service';
 @Injectable()
-export class IndexerService {
+export class IndexerService implements OnModuleInit {
   private root: IndexNode | null = null;
+
+  constructor(private readonly dataLoader: DataLoaderService) {}
+
+  onModuleInit() {
+    this.loadData();
+  }
+
+  private loadData() {
+    const data = this.dataLoader.loadData();
+    data.index.forEach((entry: { term: string; urls: string[] }) => {
+      entry.urls.forEach((url) => this.insert(entry.term, url));
+    });
+  }
 
   insert(term: string, url: string) {
     this.root = this.insertNode(this.root, term, url);
