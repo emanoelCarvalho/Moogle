@@ -17,8 +17,8 @@ export class SearchService {
     return this.treeService.getAll();
   }
 
-  async getAllIndexedTerms() {
-    return this.indexerService.getAll();
+  async getAllIndexedTerms(url: string) {
+    return this.indexerService.getAll(url);
   }
 
   async searchByTitle(title: string) {

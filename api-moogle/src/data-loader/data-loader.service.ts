@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 @Injectable()
 export class DataLoaderService {
-  private readonly filePath = './db.json';
+  private readonly filePath = '/home/ehcs/Documentos/buscador-web/db.json';
 
   loadData(): any {
     try {

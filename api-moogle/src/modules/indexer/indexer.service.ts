@@ -13,9 +13,14 @@ export class IndexerService implements OnModuleInit {
 
   private loadData() {
     const data = this.dataLoader.loadData();
-    data.index.forEach((entry: { term: string; urls: string[] }) => {
-      entry.urls.forEach((url) => this.insert(entry.term, url));
-    });
+
+    if (data.index) {
+      for (const { term, urls } of data.index) {
+        for (const url of urls) {
+          this.insert(term, url);
+        }
+      }
+    }
   }
 
   insert(term: string, url: string) {
@@ -54,7 +59,7 @@ export class IndexerService implements OnModuleInit {
       : this.searchNode(node.right, term);
   }
 
-  getAll(): { term: string; urls: string[] }[] {
+  getAll(url: string): { term: string; urls: string[] }[] {
     const result: { term: string; urls: string[] }[] = [];
     this.inOrderTraversal(this.root, result);
     return result;

@@ -65,7 +65,7 @@ export class TreeService implements OnModuleInit {
   private inOrderTraversal(node: TreeNode | null, result: TreeNode[]) {
     if (node) {
       this.inOrderTraversal(node.left, result);
-      result.push(node); // Corrigido aqui
+      result.push(node);
       this.inOrderTraversal(node.right, result);
     }
   }

@@ -27,7 +27,7 @@ export class SearchController {
   }
 
   @Get('indexed-terms')
-  getAllIndexedTerms() {
-    return this.searchService.getAllIndexedTerms();
+  getAllIndexedTerms(@Query('url') url: string) {
+    return this.searchService.getAllIndexedTerms(url);
   }
 }
