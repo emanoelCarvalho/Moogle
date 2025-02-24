@@ -3,6 +3,7 @@ import { CrawlerModule } from './modules/crawler/crawler.module';
 import { SearchModule } from './modules/search/search.module';
 import { IndexerModule } from './modules/indexer/indexer.module';
 import { TreeModule } from './modules/tree/tree.module';
+import { DataLoaderService } from './data-loader/data-loader.service';
 
 @Module({
   imports: [
@@ -11,5 +12,6 @@ import { TreeModule } from './modules/tree/tree.module';
     IndexerModule,
     TreeModule,
   ],
+  providers: [DataLoaderService],
 })
 export class AppModule {}
