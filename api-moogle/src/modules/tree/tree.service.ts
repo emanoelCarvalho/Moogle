@@ -89,8 +89,4 @@ export class TreeService implements OnModuleInit {
   
     return this.findNodeByTitle(node.left, title) || this.findNodeByTitle(node.right, title);
   }
-
-  private searchByTitle(title: string): TreeNode | null {
-    return this.searchNode(this.root, title);
-  }
 }
