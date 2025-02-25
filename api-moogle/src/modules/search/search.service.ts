@@ -10,18 +10,22 @@ export class SearchService {
   ) {}
 
   async searchByKeyword(term: string) {
-    return this.indexerService.search(term);
+    const resultado = this.indexerService.search(term);
+    return resultado;
   }
 
   async getAllIndexedPages() {
-    return this.treeService.getAll();
+    const resultado = this.treeService.getAll();
+    return resultado;
   }
 
   async getAllIndexedTerms(url: string) {
-    return this.indexerService.getAll(url);
+    const resultado = this.indexerService.getAll();
+    return resultado;
   }
 
   async searchByTitle(title: string) {
-    return this.treeService.getByTitle(title);
+    const resultado = this.treeService.getByTitle(title);
+    return resultado || { error: "Nenhum resultado encontrado" };
   }
 }

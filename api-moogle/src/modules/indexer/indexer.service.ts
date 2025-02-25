@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { IndexNode } from './index-node';
 import { DataLoaderService } from 'src/data-loader/data-loader.service';
+
 @Injectable()
 export class IndexerService implements OnModuleInit {
   private root: IndexNode | null = null;
@@ -14,17 +15,18 @@ export class IndexerService implements OnModuleInit {
   private loadData() {
     const data = this.dataLoader.loadData();
 
-    if (data.index) {
-      for (const { term, urls } of data.index) {
-        for (const url of urls) {
-          this.insert(term, url);
+    if (data.pages) {
+      for (const page of data.pages) {
+        for (const word of page.words) {
+          this.insert(word, page.url);
         }
       }
     }
   }
 
   insert(term: string, url: string) {
-    this.root = this.insertNode(this.root, term, url);
+    const lowerTerm = term.toLowerCase(); 
+    this.root = this.insertNode(this.root, lowerTerm, url);
   }
 
   private insertNode(
@@ -46,7 +48,8 @@ export class IndexerService implements OnModuleInit {
   }
 
   search(term: string): string[] {
-    const node = this.searchNode(this.root, term);
+    const lowerTerm = term.toLowerCase(); 
+    const node = this.searchNode(this.root, lowerTerm);
     return node ? Array.from(node.urls) : [];
   }
 
@@ -59,7 +62,7 @@ export class IndexerService implements OnModuleInit {
       : this.searchNode(node.right, term);
   }
 
-  getAll(url: string): { term: string; urls: string[] }[] {
+  getAll(): { term: string; urls: string[] }[] {
     const result: { term: string; urls: string[] }[] = [];
     this.inOrderTraversal(this.root, result);
     return result;

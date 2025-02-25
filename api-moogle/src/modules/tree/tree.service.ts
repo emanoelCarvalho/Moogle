@@ -16,6 +16,9 @@ export class TreeService implements OnModuleInit {
     data.pages.forEach((page: { url: string; title: string; links: string[] }) => {
       this.insert(page.url, page.title, page.links);
     });
+
+    console.log(data)
+    console.log(this.root)
   }
 
   insert(url: string, title: string, links: string[]) {
@@ -59,6 +62,8 @@ export class TreeService implements OnModuleInit {
   getAll(): TreeNode[] {
     const result: TreeNode[] = [];
     this.inOrderTraversal(this.root, result);
+
+    console.log("Árvore carregada:", this.getAll());
     return result;
   }
 
@@ -70,8 +75,19 @@ export class TreeService implements OnModuleInit {
     }
   }
 
-  getByTitle(title: string): TreeNode | null {
-    return this.searchByTitle(title);
+  getByTitle(title: string) {
+    const lowerTitle = title.toLowerCase();
+    return this.findNodeByTitle(this.root, lowerTitle);
+  }
+
+  private findNodeByTitle(node: TreeNode | null, title: string): TreeNode | null {
+    if (!node) return null;
+  
+    if (node.title.toLowerCase() === title) {
+      return node;
+    }
+  
+    return this.findNodeByTitle(node.left, title) || this.findNodeByTitle(node.right, title);
   }
 
   private searchByTitle(title: string): TreeNode | null {

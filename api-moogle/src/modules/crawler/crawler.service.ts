@@ -23,7 +23,7 @@ export class CrawlerService {
       });
 
       const $ = cheerio.load(data);
-      const title = $('title').text();
+      const title = $('title').text().trim();
       const links: string[] = [];
 
       $('a').each((_, element) => {
@@ -37,15 +37,13 @@ export class CrawlerService {
       const words = this.extractKeywords(textContent);
 
       this.treeService.insert(url, title, links);
-
       words.forEach((word) => this.indexerService.insert(word, url));
 
       const pageData = { url, title, links, words };
-
       await this.saveToJsonServer(pageData);
       return pageData;
     } catch (error) {
-      console.log(url)
+      console.error(`Erro ao processar a URL ${url}:`, error.message);
       return { error: 'Erro ao processar a URL' };
     }
   }
@@ -65,6 +63,7 @@ export class CrawlerService {
       );
       return response.data;
     } catch (error) {
+      console.error('Erro ao salvar no JSON Server:', error.message);
       throw new Error('Erro ao salvar no JSON Server');
     }
   }
