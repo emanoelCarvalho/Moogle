@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 @Injectable()
 export class DataLoaderService {
-  private readonly filePath = 'C:/Users/Cleiton/Documents/Moogle/db.json';
+  private readonly filePath = 'C:/Users/Gean de Lima/Documents/0animo-pra-ideia-torta/Moogle/db.json';
 
   loadData(): any {
     try {

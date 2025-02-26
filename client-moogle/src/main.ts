@@ -6,7 +6,6 @@ import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from './views/Home.vue';
 import Results from './views/Results.vue';
-import Preview from './views/Preview.vue';
 
 const vuetify = createVuetify();
 
@@ -14,8 +13,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', component: Home },
-    { path: '/results', component: Results },
-    { path: '/preview', component: Preview }
+    { path: '/results', component: Results }
   ]
 });
 
